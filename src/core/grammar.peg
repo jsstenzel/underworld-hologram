@@ -3,7 +3,7 @@
 extern "C" {
 #endif
 
-#include <stdio.h>
+#include <stdbool.h>
 #define YYSTYPE char*
 #define YY_CTX_LOCAL 1
 
@@ -13,20 +13,20 @@ typedef struct {
   char* objects;
   bool flagEmpty;
   bool flagKeyword;
-} expression;
+} SExpression;
 
-expression g_expression;
+SExpression g_expression;
 char* g_inputString;
 int g_inputPos;
 
-void free_expression() {
+void freeExpression() {
   free(g_expression.action);
   free(g_expression.targets);
   free(g_expression.objects);
 }
 
-void clear_expression() {
-  free_expression();
+void clearExpression() {
+  freeExpression();
   g_expression.action = (YYSTYPE)malloc(1);
   g_expression.targets = (YYSTYPE)malloc(1);
   g_expression.objects = (YYSTYPE)malloc(1);
@@ -37,13 +37,13 @@ void clear_expression() {
   g_expression.flagKeyword = false;
 }
 
-void expression_set_action(YYSTYPE str, int len) {
+void expressionSetAction(YYSTYPE str, int len) {
   free(g_expression.action);
   g_expression.action = (YYSTYPE)malloc(len + 1);
   strcpy(g_expression.action, str);
 }
 
-void expression_add_target(YYSTYPE str, int len) {
+void expressionAddTarget(YYSTYPE str, int len) {
   int oldLen = strlen(g_expression.targets);
 
   YYSTYPE tmp = (YYSTYPE)realloc(g_expression.targets, oldLen + len + 1);
@@ -58,7 +58,7 @@ void expression_add_target(YYSTYPE str, int len) {
   g_expression.targets[oldLen + len] = '\0';
 }
 
-void expression_add_object(YYSTYPE str, int len) {
+void expressionAddObject(YYSTYPE str, int len) {
   int oldLen = strlen(g_expression.objects);
 
   YYSTYPE tmp = (YYSTYPE)realloc(g_expression.objects, oldLen + len + 1);
@@ -78,10 +78,10 @@ void expression_add_object(YYSTYPE str, int len) {
 Statement     = (- Expression End)
               | ('' End)                                            { g_expression.flagEmpty = true; }
 Expression    = (Action Preposition? Object+ (Positional Preposition? Target+)?)                    
-              | w:Word                                              { expression_set_action(w, yyleng+1); free(w); g_expression.flagKeyword = true; }
-Object        = !Preposition !Positional w:Word                     { expression_add_object(w, yyleng+1); free(w); }
-Target        = !Preposition !Positional w:Word                     { expression_add_target(w, yyleng+1); free(w); }
-Action        = w:Word                                              { expression_set_action(w, yyleng+1); free(w); }
+              | w:Word                                              { expressionSetAction(w, yyleng+1); free(w); g_expression.flagKeyword = true; }
+Object        = !Preposition !Positional w:Word                     { expressionAddObject(w, yyleng+1); free(w); }
+Target        = !Preposition !Positional w:Word                     { expressionAddTarget(w, yyleng+1); free(w); }
+Action        = w:Word                                              { expressionSetAction(w, yyleng+1); free(w); }
 Word          = < [a-z]+ > -                                        { $$ = strdup(yytext); }
 Preposition   = ('the' | 'a') -
 Positional    = ('on' | 'in' | 'inside' | 'under' | 'above' | 'from') -

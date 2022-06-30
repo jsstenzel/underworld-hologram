@@ -10,7 +10,7 @@
 extern "C" {
 #endif
 
-#include <stdio.h>
+#include <stdbool.h>
 #define YYSTYPE char*
 #define YY_CTX_LOCAL 1
 
@@ -20,20 +20,20 @@ typedef struct {
   char* objects;
   bool flagEmpty;
   bool flagKeyword;
-} expression;
+} SExpression;
 
-expression g_expression;
+SExpression g_expression;
 char* g_inputString;
 int g_inputPos;
 
-void free_expression() {
+void freeExpression() {
   free(g_expression.action);
   free(g_expression.targets);
   free(g_expression.objects);
 }
 
-void clear_expression() {
-  free_expression();
+void clearExpression() {
+  freeExpression();
   g_expression.action = (YYSTYPE)malloc(1);
   g_expression.targets = (YYSTYPE)malloc(1);
   g_expression.objects = (YYSTYPE)malloc(1);
@@ -44,13 +44,13 @@ void clear_expression() {
   g_expression.flagKeyword = false;
 }
 
-void expression_set_action(YYSTYPE str, int len) {
+void expressionSetAction(YYSTYPE str, int len) {
   free(g_expression.action);
   g_expression.action = (YYSTYPE)malloc(len + 1);
   strcpy(g_expression.action, str);
 }
 
-void expression_add_target(YYSTYPE str, int len) {
+void expressionAddTarget(YYSTYPE str, int len) {
   int oldLen = strlen(g_expression.targets);
 
   YYSTYPE tmp = (YYSTYPE)realloc(g_expression.targets, oldLen + len + 1);
@@ -65,7 +65,7 @@ void expression_add_target(YYSTYPE str, int len) {
   g_expression.targets[oldLen + len] = '\0';
 }
 
-void expression_add_object(YYSTYPE str, int len) {
+void expressionAddObject(YYSTYPE str, int len) {
   int oldLen = strlen(g_expression.objects);
 
   YYSTYPE tmp = (YYSTYPE)realloc(g_expression.objects, oldLen + len + 1);
@@ -383,7 +383,7 @@ YY_ACTION(void) yy_1_Action(yycontext *yy, char *yytext, int yyleng)
   yyprintf((stderr, "do yy_1_Action\n"));
   {
 #line 84
-   expression_set_action(w, yyleng+1); free(w); ;
+   expressionSetAction(w, yyleng+1); free(w); ;
   }
 #undef yythunkpos
 #undef yypos
@@ -399,7 +399,7 @@ YY_ACTION(void) yy_1_Target(yycontext *yy, char *yytext, int yyleng)
   yyprintf((stderr, "do yy_1_Target\n"));
   {
 #line 83
-   expression_add_target(w, yyleng+1); free(w); ;
+   expressionAddTarget(w, yyleng+1); free(w); ;
   }
 #undef yythunkpos
 #undef yypos
@@ -415,7 +415,7 @@ YY_ACTION(void) yy_1_Object(yycontext *yy, char *yytext, int yyleng)
   yyprintf((stderr, "do yy_1_Object\n"));
   {
 #line 82
-   expression_add_object(w, yyleng+1); free(w); ;
+   expressionAddObject(w, yyleng+1); free(w); ;
   }
 #undef yythunkpos
 #undef yypos
@@ -431,7 +431,7 @@ YY_ACTION(void) yy_1_Expression(yycontext *yy, char *yytext, int yyleng)
   yyprintf((stderr, "do yy_1_Expression\n"));
   {
 #line 81
-   expression_set_action(w, yyleng+1); free(w); g_expression.flagKeyword = true; ;
+   expressionSetAction(w, yyleng+1); free(w); g_expression.flagKeyword = true; ;
   }
 #undef yythunkpos
 #undef yypos

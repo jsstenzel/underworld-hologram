@@ -3,7 +3,7 @@
 
 CObjectList::CObjectList() {}
 
-CObjectList::CObjectList(std::vector<std::shared_ptr<CObject>> vec) :
+CObjectList::CObjectList(const std::vector<std::shared_ptr<CObject>>& vec) :
   m_objects(vec) {}
 
 void CObjectList::addObject(std::shared_ptr<CObject> object) { 
@@ -20,35 +20,12 @@ bool CObjectList::removeObject(std::shared_ptr<CObject> object) {
   return false;
 }
 
-CObjectList CObjectList::findobject(const SObjectDesc& desc) {
+CObjectList CObjectList::findObject(const std::string& name) {
   // Find all objects with matching name
   std::vector<std::shared_ptr<CObject>> objects;
   for(auto object : m_objects) {
-    if (object->getName() == desc.m_name) {
+    if (object->getName() == name) {
       objects.push_back(object);
-    }
-  }
-
-  // Filter list if theres more than one match
-  if (objects.size() > 1) { 
-    // Filter to matching adjectives
-    for(auto matchAdjective : desc.m_adjectives) {
-      std::vector<std::shared_ptr<CObject>> matchObjects;
-      
-      // Check each object to see if it has the adjective
-      for(auto object : objects) {
-        auto objAdjectives = object->getAdjectives();
-        for(auto objAdjective : objAdjectives) {
-          if (objAdjective == matchAdjective) {
-            matchObjects.push_back(object);
-            break;
-          }
-        }
-      }
-
-      // Only keep matched objects
-      objects.swap(matchObjects);
-      if (objects.empty()) { break; }
     }
   }
   
@@ -64,3 +41,11 @@ void CObjectList::clear() { m_objects.clear(); }
 std::shared_ptr<CObject> CObjectList::at(const size_t& index) { return m_objects.at(index); }
 
 std::shared_ptr<CObject>& CObjectList::operator[](size_t index) { return m_objects[index]; }
+
+std::vector<std::shared_ptr<CObject>>::iterator CObjectList::begin() { return m_objects.begin(); }
+
+std::vector<std::shared_ptr<CObject>>::iterator CObjectList::end() { return m_objects.end(); }
+
+std::vector<std::shared_ptr<CObject>>::reverse_iterator CObjectList::rbegin() { return m_objects.rbegin(); }
+
+std::vector<std::shared_ptr<CObject>>::reverse_iterator CObjectList::rend() { return m_objects.rend(); }

@@ -1,13 +1,17 @@
 #include "room.hpp"
 #include "object.hpp"
 
-CRoom::CRoom(std::string name) :
-  m_name(name) {}
+CRoom::CRoom(std::string name, std::string description) :
+  m_name(name), m_description(description) {}
 
-std::string CRoom::getName() { return m_name; }
+const std::string& CRoom::getName() { return m_name; }
 
-void CRoom::addObject(std::shared_ptr<CObject> object) { m_objects.addObject(object); }
+const std::string& CRoom::getDescription() { return m_description; }
 
-bool CRoom::removeObject(std::shared_ptr<CObject> object) { return m_objects.removeObject(object); }
+void CRoom::addObject(std::shared_ptr<CObject> object) { m_allObjects.addObject(object); }
 
-CObjectList CRoom::findObject(const SObjectDesc& desc) { return m_objects.findobject(desc); }
+bool CRoom::removeObject(std::shared_ptr<CObject> object) { return m_allObjects.removeObject(object); }
+
+CObjectList CRoom::findObject(const std::string& name) { return m_allObjects.findObject(name); }
+
+const CObjectList& CRoom::getAllObjects() { return m_allObjects; }

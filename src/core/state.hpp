@@ -7,13 +7,14 @@
 
 class CState : std::enable_shared_from_this<CState> {
 public:
-  CState(std::string header);
+  CState();
 
-  virtual void handleKeyword(std::string action) {}
+  virtual void handleKeyword(const std::string& action) {}
 
   void quitGame();
   bool isRunning();
-  std::string getHeader();
+  const std::string& getHeader();
+  void setHeader(const std::string& header);
 private:
   std::string m_header = "";
   bool m_runGame = true;

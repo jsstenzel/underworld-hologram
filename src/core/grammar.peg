@@ -83,7 +83,7 @@ Object        = !Preposition !Positional w:Word                     { expression
 Target        = !Preposition !Positional w:Word                     { expressionAddTarget(w, yyleng+1); free(w); }
 Action        = w:Word                                              { expressionSetAction(w, yyleng+1); free(w); }
 Word          = < [a-z]+ > -                                        { $$ = strdup(yytext); }
-Preposition   = ('the' | 'a') -
+Preposition   = ('the' | 'at' | 'a') -
 Positional    = ('on' | 'in' | 'inside' | 'under' | 'above' | 'from') -
 End           = '\n' | '\r\n' | '\r' | ';'
 -             = [ \t]*

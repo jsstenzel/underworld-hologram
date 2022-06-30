@@ -4,6 +4,7 @@
  */
 
 #include "common.hpp"
-#include "state.hpp"
 #include "game.hpp"
+#include "state.hpp"
+#include "room.hpp"
 #include "object.hpp"

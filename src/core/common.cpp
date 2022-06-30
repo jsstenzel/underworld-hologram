@@ -19,10 +19,10 @@ std::string SObjectDesc::serialize() const {
 }
 
 std::string SCommandDesc::serialize() const {
-  std::string str = "Action: ";
+  std::string str;
   str += ("Action" +m_action + "\n");
-  str += ("Subject: " + m_subject.serialize() + "\n");
-  str += ("Target: " + m_target.serialize());
+  str += ("Subject: " + m_subject + "\n");
+  str += ("Target: " + m_target);
   return str;
 }
 
@@ -56,26 +56,24 @@ bool get_command(SCommandDesc& command) {
     }
     else {
       command.m_action = std::string(g_expression.action);
-      std::string token_str;
 
+      std::string token_str;
       std::string objects_str(g_expression.objects);
       if (!objects_str.empty()) {
         std::stringstream objects_ss(objects_str);
         while(std::getline(objects_ss, token_str, ';')) {
-          command.m_subject.m_adjectives.push_back(token_str);
+          command.m_subject += (token_str + " ");
         }
-        command.m_subject.m_name = command.m_subject.m_adjectives.back();
-        command.m_subject.m_adjectives.pop_back();
+        command.m_subject.pop_back();
       }
       
       std::string targets_str(g_expression.targets);
       if (!targets_str.empty()) {
         std::stringstream targets_ss(targets_str);
         while(std::getline(targets_ss, token_str, ';')) {
-          command.m_target.m_adjectives.push_back(token_str);
+          command.m_target += (token_str + " ");
         }
-        command.m_target.m_name = command.m_target.m_adjectives.back();
-        command.m_target.m_adjectives.pop_back();
+        command.m_target.pop_back();
       }
     }
   }

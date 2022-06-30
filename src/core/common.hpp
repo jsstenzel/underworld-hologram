@@ -29,8 +29,8 @@ struct SObjectDesc {
 struct SCommandDesc{
   bool m_flagKeyword = false;
   std::string m_action = "";
-  SObjectDesc m_subject;
-  SObjectDesc m_target;
+  std::string m_subject;
+  std::string m_target;
 
   std::string serialize() const;
 };

@@ -2,6 +2,7 @@
 @echo off
 setlocal
 SET PTH=%~dp0
+SET PATH=%PTH%..\peg;%PATH%
 SET GEN="leg.exe"
 SET SRC=%PTH%..\src\
 SET BIN=%PTH%..\bin\
